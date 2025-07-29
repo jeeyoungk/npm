@@ -20,8 +20,8 @@
     "dev": "tsup --watch",
     "test": "vitest",
     "test:run": "vitest run",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

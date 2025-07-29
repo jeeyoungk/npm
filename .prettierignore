@@ -1,0 +1,5 @@
+# note: this file is symlinked to individual package directories.
+dist/
+node_modules/
+.pnpm-store/
+pnpm-lock.yaml
