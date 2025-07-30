@@ -1,6 +1,6 @@
 {
   "name": "@jeeyoungk/chain",
-  "version": "0.0.0",
+  "version": "0.0.0-20250729",
   "description": "Utility scripts to chain functions",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
