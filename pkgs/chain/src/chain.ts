@@ -28,11 +28,12 @@ export class Chain<I, O> {
       [name]: (...args: Parameters<typeof this.fn>) => this.fn(...args),
     }
     const f = obj[name] as typeof this.fn & { displayName: string }
-    f.displayName = name
+    f.displayName = name // for react.
     return f
   }
 }
 
+/** An example middleware that returns a default value if the function throws an error. */
 export function withDefaultOnError<I, O>(
   input: I,
   fn: Next<I, O>,
