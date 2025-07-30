@@ -7,10 +7,19 @@ export type Middleware<I1, O1, Args extends unknown[], I2 = I1, O2 = O1> = (
 ) => O2
 
 export function chain<I, O>(fn: Next<I, O>): Chain<I, O> {
-  return new Chain(fn)
+  return new ChainImpl(fn)
 }
 
-export class Chain<I, O> {
+export interface Chain<I, O> {
+  with<Args extends unknown[] = [], In2 = I, Out2 = O>(
+    middleware: Middleware<I, O, Args, In2, Out2>,
+    ...args: Args
+  ): Chain<In2, Out2>
+  /** Returns the function with a given name. */
+  named(name: string): (input: I) => O
+}
+
+class ChainImpl<I, O> implements Chain<I, O> {
   private readonly fn: Next<I, O>
   constructor(fn: Next<I, O>) {
     this.fn = fn
@@ -19,8 +28,8 @@ export class Chain<I, O> {
   with<Args extends unknown[] = [], In2 = I, Out2 = O>(
     middleware: Middleware<I, O, Args, In2, Out2>,
     ...args: Args
-  ): Chain<In2, Out2> {
-    return new Chain((input: In2) => middleware(input, this.fn, ...args))
+  ): ChainImpl<In2, Out2> {
+    return new ChainImpl((input: In2) => middleware(input, this.fn, ...args))
   }
 
   named(name: string): (input: I) => O {
