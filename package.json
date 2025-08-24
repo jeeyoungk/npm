@@ -1,9 +1,13 @@
 {
   "name": "@jeeyoungk/npm",
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "private": false,
   "workspaces": [
     "pkgs/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
