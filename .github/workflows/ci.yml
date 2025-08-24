@@ -7,17 +7,15 @@ on:
     branches: [main]
 
 jobs:
-  ci:
+  quality-checks:
     runs-on: ubuntu-latest
-
+    name: Code Quality & Tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
+      - name: Install mise
+        uses: jdx/mise-action@v2
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -36,16 +34,49 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        id: install
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code formatting
+        if: always() && steps.install.conclusion == 'success'
+        run: pnpm format:check
+
+      - name: Run linting
+        if: always() && steps.install.conclusion == 'success'
+        run: pnpm lint
+
+      - name: Build packages
+        if: always() && steps.install.conclusion == 'success'
+        run: pnpm build
+
+      - name: Run tests
+        if: always() && steps.install.conclusion == 'success'
+        run: pnpm test:run
+
+  release:
+    needs: quality-checks
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm build
 
-      - name: Run tests
-        run: pnpm test:run
-
-      - name: Run linting
-        run: pnpm lint
-
-      - name: Check formatting
-        run: pnpm format:check
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
