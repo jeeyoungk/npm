@@ -12,11 +12,15 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["node"]
   },
   "references": [
     {
       "path": "./pkgs/chain"
+    },
+    {
+      "path": "./pkgs/kitchensink"
     },
     {
       "path": "./pkgs/temporal-testing-library"

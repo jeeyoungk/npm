@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { sleep, isNotNullish, chunk, pick, omit } from '../utils'
 
 describe('utils', () => {
@@ -31,7 +31,10 @@ describe('utils', () => {
   describe('chunk', () => {
     it('should chunk array into specified size', () => {
       expect(chunk([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]])
-      expect(chunk([1, 2, 3, 4], 2)).toEqual([[1, 2], [3, 4]])
+      expect(chunk([1, 2, 3, 4], 2)).toEqual([
+        [1, 2],
+        [3, 4],
+      ])
     })
 
     it('should handle empty array', () => {
